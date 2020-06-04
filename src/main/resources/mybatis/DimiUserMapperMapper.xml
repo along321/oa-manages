@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzl.oamanages.oa.mapper.DimiUserMapper">
+
+    <sql id="user">
+        SELECT u.*,p.`id` AS pid,p.`name` AS pname,d.`id` AS did,d.`name` AS dname  FROM
+
+            `oa_dimi_user` u  LEFT JOIN oa_post p  ON u.`postId` = p.`id`  LEFT JOIN `oa_dept` d ON d.id = u.deptId
+    </sql>
+    <resultMap id="userRole" type="com.qzl.oamanages.oa.entity.DimiUser">
+        <id column="id" property="id"></id>
+        <result column="real_name" property="realName"></result>
+        <result column="user_name" property="userName"></result>
+        <result column="emali" property="emali"></result>
+        <result column="birthday" property="birthday"></result>
+        <result column="sex" property="sex"></result>
+        <result column="phone" property="phone"></result>
+        <result column="address" property="address"></result>
+        <result column="dimiDate" property="dimiDate"></result>
+        <association property="oaPost" javaType="com.qzl.oamanages.shiro.entity.OaPost">
+            <id column="pid" property="id"></id>
+            <result column="pname" property="name"></result>
+        </association>
+        <association property="oaDept" javaType="com.qzl.oamanages.shiro.entity.OaDept">
+            <id column="did" property="id"></id>
+            <result column="dname" property="name"></result>
+        </association>
+    </resultMap>
+
+    <select id="allDimiUser" resultMap="userRole">
+        <include refid="user"></include>
+    </select>
+
+</mapper>

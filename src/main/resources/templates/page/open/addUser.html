@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  
+  <head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" th:href="@{/css/font.css}" href="./css/font.css ">
+    <link rel="stylesheet" th:href="@{/css/xadmin.css}" href="./css/xadmin.css">
+      <script type="text/javascript" th:src="@{/webjars/jquery/3.3.1-1/jquery.min.js}" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+      <script th:src="@{/webjars/layui/2.3.0/layui.js}" src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/js/xadmin.js}" src="./js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="x-body">
+        <form class="layui-form">
+          <div class="layui-form-item">
+              <label for="username" class="layui-form-label">
+                  <span class="x-red">*</span>登录名
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="userName" name="userName" required="" lay-verify="required"
+                         autocomplete="off" value="" class="layui-input">
+              </div>
+          </div>
+            <div class="layui-form-item">
+                <label for="username" class="layui-form-label">
+                    <span class="x-red">*</span>密码
+                </label>
+                <div class="layui-input-inline">
+                    <input type="password" id="password" name="password" required="" lay-verify="required"
+                           autocomplete="off" value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="realName" class="layui-form-label">
+                    <span class="x-red">*</span>真实名称
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="realName" name="realName" required="" lay-verify="required"
+                           autocomplete="off" value="" class="layui-input">
+                </div>
+            </div>
+          <div class="layui-form-item">
+              <label for="L_phone" class="layui-form-label">
+                  <span class="x-red">*</span>手机
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text"value="" id="L_phone" name="phone" required="" lay-verify="phone"
+                  autocomplete="off" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  <span class="x-red"></span>邮箱
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" value="" id="L_email" name="email" required="" lay-verify="email"
+                  autocomplete="off" class="layui-input">
+              </div>
+          </div>
+            <div class="layui-form-item">
+                <label for="L_birthday" class="layui-form-label">
+                    <span class="x-red"></span>生日
+                </label>
+                <div class="layui-input-inline">
+                    <input class="layui-input"  name="birthday" id="L_birthday" lay-verify="birthday">
+                    <!--<input type="text"th:value="${user.birthday}" value="" id="L_birthday" name="birthday" required="" lay-verify="birthday"-->
+                           <!--autocomplete="off" class="layui-input">-->
+                </div>
+            </div>
+                  <div class="layui-form-item">
+                      <label for="L_address" class="layui-form-label">
+                          <span class="x-red"></span>住址
+                      </label>
+                      <div class="layui-input-inline">
+                          <input type="text" value="" id="L_address" name="address" required="" lay-verify="address"
+                                 autocomplete="off" class="layui-input">
+                      </div>
+                  </div>
+            <div class="layui-form-item">
+            <label for="L_email" class="layui-form-label">
+                <span class="x-red"></span>性别
+            </label>
+            <div class="layui-input-inline">
+                <input type="radio" name="sex"  value="0" title="男" lay-verify="sex" checked>
+                <input type="radio" name="sex"  value="1" title="女" lay-verify="sex">
+            </div>
+        </div>
+            <div class="layui-form-item">
+                <label for="L_email" class="layui-form-label">
+                    <span class="x-red"></span>负责人
+                </label>
+                <div class="layui-input-inline">
+                    <input type="checkbox" name="principal" value="1"  lay-verify="principal">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="L_deptid" class="layui-form-label">
+                    <span class="x-red"></span>部门
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" contentEditable="false" onclick="openDept()" value="" id="L_deptname" name="deptname" required=""
+                           autocomplete="off" class="layui-input">
+                    <input type="hidden" name="deptId"  value="1" id="L_deptid" lay-verify="deptId" autocomplete="off" class="layui-input">
+                </div>
+
+            </div>
+          <div class="layui-form-item">
+              <label class="layui-form-label"><span class="x-red">*</span>角色</label>
+              <div class="layui-input-inline">
+                  <select name="roleid">
+                    <option th:each="r:${roles}" value="1"  th:value="${r['id']}" th:text="${r['name']}">11</option>
+                  </select>
+              </div>
+          </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="x-red">*</span>岗位</label>
+                <div class="layui-input-inline">
+                    <select name="postId">
+                        <option th:each="p:${posts}" value="1"  th:value="${p['id']}" th:text="${p['name']}">11</option>
+                    </select>
+                </div>
+            </div>
+
+          <div class="layui-form-item">
+              <label for="L_submit" class="layui-form-label">
+              </label>
+              <button  class="layui-btn" id="L_submit" lay-filter="add" lay-submit="">
+                  添加
+              </button>
+          </div>
+      </form>
+    </div>
+    <!-- 底部结束 -->
+    <script th:inline="javascript"> var ctx = [[@{/}]] ; </script>
+    <script>
+        layui.use(['form','layer','laydate','tree'], function(){
+            $ = layui.jquery;
+          var form = layui.form
+          ,layer = layui.layer,
+              laydate = layui.laydate;
+        
+          //自定义验证规则
+          // form.verify({
+          //     birthday: function(value){
+          //     if(value.length < 5){
+          //       return '昵称至少得5个字符啊';
+          //     }
+          //   }
+          // });
+            laydate.render({
+                elem:"#L_birthday"
+            })
+          //监听提交
+          form.on('submit(add)', function(data){
+            console.log(data);
+            //发异步，把数据提交给php
+              $.ajax({
+                  type: "POST",
+                  data: data.field,
+                  url: ctx+"user/adduser",
+                  success: function (data) {
+                      data = eval(data);
+                        if(data.code==200){
+                            layer.alert("增加成功", {icon: 6},function () {
+                                // 获得frame索引
+                                var index = parent.layer.getFrameIndex(window.name);
+                                //关闭当前frame
+                                parent.layer.close(index);
+                            });
+                        }else{
+                            layer.alert("添加失败");
+                        }
+                  }
+
+              });
+
+            return false;
+          });
+        });
+        function openDept() {
+            layer.open({
+                type: 2,
+                area: ['100', '600'],
+                fix: false, //不固定
+                maxmin: true,
+                shadeClose: true,
+                shade:0.4,
+                title: "选择部门",
+                content: '/dept'
+            });
+        }
+    </script>
+  </body>
+
+</html>

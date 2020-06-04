@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzl.oamanages.oa.mapper.TaskMapper">
+
+
+    <select id="allTask" resultType="com.qzl.oamanages.oa.entity.Task">
+        SELECT * FROM oa_task WHERE  uid =#{id} and `sign` = 1 ORDER BY id DESC
+    </select>
+    <delete id="delTask">
+        DELETE
+        FROM
+            `oa_task`
+        WHERE `id` = #{id}
+    </delete>
+    <update id="updataTask">
+        UPDATE
+            `oa_task`
+        SET
+            `sign` = #{sign}
+        WHERE `id` = #{id}
+    </update>
+    <select id="postTask" resultType="com.qzl.oamanages.oa.entity.Task">
+        select * from oa_task where `sign`=#{sign} ORDER BY id DESC
+    </select>
+    <select id="haveTask" resultType="com.qzl.oamanages.oa.entity.Task">
+        select * from oa_task where `sign`=3 and  uid = #{id} or appId = #{id} ORDER BY id DESC
+    </select>
+    <select id="findById" resultType="com.qzl.oamanages.oa.entity.Task">
+        select * from oa_task where id = #{id}
+    </select>
+
+    <insert id="addTask">
+        INSERT INTO `oa_task` (
+            `uid`,
+            `title`,
+            `apptime`,
+            `proposer`,
+            `task`,
+            `taskId`,
+            `sign`,
+            `appId`
+        )
+        VALUES
+        (
+            #{uid},
+            #{title},
+            #{apptime},
+            #{proposer},
+            #{task},
+            #{taskId},
+            1,
+            #{appId}
+        )
+    </insert>
+
+</mapper>

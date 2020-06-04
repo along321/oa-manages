@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzl.oamanages.shiro.mapper.OaDeptMapper">
+
+
+    <select id="allDept" resultType="com.qzl.oamanages.shiro.entity.OaDept">
+        SELECT * FROM `oa_dept` where biao =0
+    </select>
+    <select id="deptByid" resultType="com.qzl.oamanages.shiro.entity.OaDept">
+        SELECT * FROM `oa_dept` where id = #{id} and biao =0
+    </select>
+    <insert id="addDept">
+        INSERT INTO `oa_dept` (
+            `name`,
+            `parent_id`,
+            `rank`,
+            `tel`,
+            biao
+        )
+        VALUES
+        (
+            #{name},
+            #{parentId},
+            #{rank},
+            #{tel},
+         0
+        )
+    </insert>
+    <update id="delDept">
+        UPDATE
+            `oa_dept`
+        SET
+            `biao` = 1
+        WHERE `id` = #{id}
+    </update>
+</mapper>

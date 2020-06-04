@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script th:src="@{/layui/layui.all.js}" src="./lib/layui/layui.all.js" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.3.1-1/jquery.min.js}" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/font.css}" href="./css/font.css">
+    <link th:href="@{/css/xadmin.css}" rel="stylesheet" href="./css/xadmin.css">
+    <script type="text/javascript" th:src="@{/js/xindex.js}" src="./js/xadmin.js"></script>
+
+</head>
+<body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a>
+          <cite>系统菜单</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
+<div class="" style="margin-top: 20px;margin-left:20px;">
+    <button class="layui-btn" id="expand">全部展开</button>
+    <button class="layui-btn" id="collapse">全部收起</button>
+    <button class="layui-btn" id="addData">添加</button>
+    <div id="demo"></div>
+</div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs " lay-event="del"><i class="layui-icon">&#xe640;</i>删除</a>
+</script>
+<script th:src="@{/layui/layui.js}" src="./lib/layui/layui.js" charset="utf-8"></script>
+<script type="text/javascript">
+    var layout=[
+        {name: 'id', field: 'id', headerClass: 'value_col', colClass: 'value_col'},
+        {name: '菜单名称', treeNodes: true, edit:'text' , headerClass: 'value_col', colClass: 'value_col'},
+        {name: '链接', field: 'url'},
+        {
+            name: '图标', treeNodes: false,render: function (row) {
+                return "<div><i class='layui-icon '>" + row.icon + "</i></div>";
+            }
+        },
+        {name:'操作',width:'15%',align:'center',
+            render: function (row) {
+                return [
+                    '<a class="layui-btn layui-btn-green layui-btn-xs" lay-event="add" onclick="addMenu('+row.id+')" title="添加子菜单"> <i class="layui-icon">&#xe654;</i> </a>',
+                    '<a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit" onclick="edit(' + row.id+ ')" title="编辑"> <i class="layui-icon">&#xe642;</i> </a>',
+                    '<a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del"   onclick="del(' + row.id + ')" title="删除"> <i class="layui-icon ">&#xe640;</i> </a>',
+                ].join('');
+
+
+            }}//把操作按钮添加进来
+        ];
+    $("#addData").click(function () {
+        addMenu(0);
+    });
+    function addMenu(id) {
+        layer.open({
+            type: 2,
+            area: ['500px', '350px'],
+            fix: false, //不固定
+            maxmin: true,
+            shadeClose: true,
+            shade:0.4,
+            title: "添加菜单",
+            content: '/addMenu/'+id,
+            end:function () {
+                window.location.reload();
+            }
+        });
+    };
+    function edit(id) {
+        layer.open({
+            type: 2,
+            area: ['500px', '350px'],
+            fix: false, //不固定
+            maxmin: true,
+            shadeClose: true,
+            shade:0.4,
+            title: "编辑菜单",
+            content: '/editMenu/'+id,
+            end:function () {
+                window.location.reload();
+            }
+        });
+    }
+    function del(id) {
+        layer.confirm('真的删除此菜单吗？',function (index) {
+            $.ajax({
+                url: "/menu/delMenu",
+                type: "POST",
+                data: {"id" : id},
+                success: function (data) {
+                    if(data.code==200){
+                        layer.msg('删除成功');
+
+                    }else{
+                        layer.msg('删除失败');
+                    }
+                }
+            });
+            layer.close(index);
+        });
+    }
+
+    var initTable = function (nodesData) {
+        layui.use(['form', 'tree', 'layer'], function () {
+            var layer = layui.layer, form = layui.form, $ = layui.jquery;
+
+            var tree1 = layui.treeGird({
+                elem: '#demo', //传入元素选择器
+                spreadable: false, //设置是否全展开，默认不展开
+                checkbox: true,
+                nodes: nodesData,
+                layout: layout
+            });
+
+            form.render();
+
+            $('#collapse').on('click', function () {
+                layui.collapse(tree1);
+            });
+
+            $('#deleteAll').on('click', function () {
+                var arr = layui.getSelected(tree1);
+                //console.log(arr);
+            });
+
+            $('#expand').on('click', function () {
+                layui.expand(tree1);
+            });
+
+        });
+    }
+    $.ajax({
+        url: "/menu/list",
+        type: "POST",
+        success: function (response) {
+            console.log(response.extend.data);
+            var data = response.extend.data;
+            initTable(data);
+        }
+    });
+</script>
+</body>
+</html>

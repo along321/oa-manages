@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  
+  <head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <!--<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />-->
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+
+    <link rel="stylesheet" th:href="@{/css/font.css}" href="./css/font.css">
+    <link th:href="@{/css/xadmin.css}" rel="stylesheet" href="./css/xadmin.css">
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.3.1-1/jquery.min.js}" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script th:src="@{/webjars/layui/2.3.0/layui.js}" src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/js/xindex.js}" src="./js/xadmin.js"></script>
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a>
+          <cite>用户</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <span class="x-right" style="line-height:40px" id="count"></span>
+      <table class="layui-table" id="allList" lay-filter="test">
+
+      </table>
+      <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="repeal"><i class="layui-icon">&#xe642;</i>撤销申请</a>
+      </script>
+    </div>
+    <script type="application/javascript" th:src="@{/js/AzDateFormat.js}" src=""></script>
+    <script type="application/javascript" th:src="@{/page/leaveComm.js}" src=""></script>
+
+
+    <!--<script type="text/javascript">-->
+        <!--layui.use(['laydate','table','form','layer'], function(){-->
+            <!--var laydate = layui.laydate,-->
+                <!--table = layui.table,-->
+                <!--form = layui.form,-->
+                <!--layer = layui.layer;-->
+            <!--table.render({-->
+                <!--elem: '#allList'-->
+                <!--,id: 'idList'-->
+                <!--,url: '/leave/commList' //数据接口-->
+                <!--,limit:5-->
+                <!--,page: true //开启分页-->
+                <!--,loading:true-->
+                <!--,even: true //开启隔行背景-->
+                <!--,size: 'lg' //大/小尺寸的表格-->
+                <!--,cellMinWidth:'60'-->
+                <!--,cols: [[ //表头-->
+                    <!--{field: 'leatype', title: '标题', sort: true, fixed: 'left'}-->
+                    <!--,{field: 'realName', title: '申请人'}-->
+                    <!--,{field: 'deptName', title: '所属部门'}-->
+                    <!--// ,{field: 'sex', title: '性别 ', width:'5%',templet:function (d) {-->
+                    <!--//         return d.sex=='1'?'女':'男';}}-->
+                    <!--,{field: 'applyDate', title: '申请时间',templet: function(d){-->
+                            <!--return Format(d.applyDate,'yyyy-MM-dd')}}-->
+                    <!--,{field: 'startDate', title: '开始时间',templet: function(d){-->
+                            <!--return Format(d.startDate,'yyyy-MM-dd')}}-->
+                    <!--,{field: 'endDate', title: '结束时间',templet: function(d){-->
+                            <!--return Format(d.endDate,'yyyy-MM-dd')}}-->
+                    <!--,{field: 'numDays', title: '请假天数'}-->
+                    <!--,{field: 'conent', title: '备注'}-->
+                    <!--,{field: 'rank', title: '状态 ',templet:function (d) {-->
+                            <!--return d.rank=='1'?'待确认':'待审批';}}-->
+                    <!--,{title:'操作',width:'15%',align:'center',toolbar:'#barDemo'}//把操作按钮添加进来-->
+                <!--]]-->
+                <!--,request:{-->
+                    <!--pageName:'pageNum'//页码的参数名称，默认：page-->
+                    <!--,limitName:'pageSize' //每页数据量的参数名，默认：limit-->
+                <!--}-->
+                <!--,response:{-->
+                    <!--statusName:'code'-->
+                    <!--,statusCode:'100'-->
+                    <!--,msgName:'msg'-->
+                    <!--,countName:'count'-->
+                    <!--,dataName:'data'-->
+                <!--}-->
+                <!--,done:function (res,curr,count) {-->
+                    <!--$("#count").text("共有数据："+count+"条");-->
+                    <!--// layer.msg("hello",{-->
+                    <!--//     icon:1,-->
+                    <!--//     time:2000-->
+                    <!--// });-->
+                <!--}-->
+            <!--});-->
+            <!--table.on('tool(test)',function (obj) {//注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"-->
+                <!--var data = obj.data;//获得当前行数据-->
+                <!--var layEvent = obj.event;//获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）-->
+                <!--var tr = obj.tr; //获得当前行 tr 的DOM对象-->
+                <!--console.log(data);-->
+               <!--if(layEvent == 'repeal'){-->
+                    <!--layer.confirm('确认撤销申请吗？',function (index) {-->
+                        <!--$.ajax({-->
+                            <!--url:'/leave/repeal',-->
+                            <!--type:"post",-->
+                            <!--data:{"id":data.id},-->
+                            <!--success:function (data) {-->
+                                <!--data = eval(data);-->
+                                <!--if(data.code==200){-->
+                                    <!--layer.msg('撤销成功');-->
+                                    <!--obj.del();-->
+                                    <!--window.location.reload();-->
+                                <!--}else{-->
+                                    <!--layer.msg('撤销失败');-->
+                                <!--}-->
+                            <!--}-->
+                        <!--})-->
+                        <!--layer.close(index);-->
+                    <!--});-->
+                    <!--// layer.msg(data.id);-->
+                <!--}-->
+            <!--});-->
+
+        <!--});-->
+    <!--</script>-->
+  </body>
+
+</html>

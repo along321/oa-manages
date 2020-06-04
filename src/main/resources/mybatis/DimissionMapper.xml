@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzl.oamanages.oa.mapper.DimissionMapper">
+
+
+    <sql id="dimiSql">
+        SELECT di.*,u.real_name AS realName,d.name AS dname FROM `oa_dimission` di LEFT JOIN oa_user u ON di.uid = u.id LEFT JOIN oa_dept d ON di.did = d.id
+    </sql>
+
+    <resultMap id="dimiMap" type="com.qzl.oamanages.oa.entity.Dimission">
+        <id column="id" property="id"></id>
+        <result column="uid" property="uid"/>
+        <result column="did" property="did"/>
+        <result column="title" property="title"/>
+        <result column="content" property="content"/>
+        <result column="dimission_date" property="dimissionDate"/>
+        <result column="rank" property="rank"/>
+        <result column="parentUser" property="parentUser"/>
+        <result column="realName" property="realName"/>
+        <result column="dname" property="deptName"/>
+        <result column="money" property="money"/>
+    </resultMap>
+
+    <select id="weiLeave" resultMap="dimiMap">
+       <include refid="dimiSql"></include>
+        where di.uid = #{uid} and di.rank = #{rank} ORDER BY di.id DESC
+    </select>
+    <select id="findById" resultType="com.qzl.oamanages.oa.entity.Dimission">
+        SELECT * FROM `oa_dimission` where id = #{id}
+    </select>
+    <delete id="delDimi">
+        DELETE
+        FROM
+            `oa_dimission`
+        WHERE `id` = #{id}
+    </delete>
+
+    <update id="updataRank">
+        UPDATE
+            `oa_dimission`
+        SET
+            `rank` = #{i}
+        WHERE `id` = #{id}
+    </update>
+
+    <update id="editDimi">
+        UPDATE
+            `oa_dimission`
+        SET
+            `title` = #{title},
+            `content` =#{content},
+            `money` = #{money},
+            `dimission_date` = #{dimissionDate}
+        WHERE `id` = #{id}
+    </update>
+
+<insert id="addDimission">
+    INSERT INTO `oa_dimission` (
+        `title`,
+        `content`,
+        `money`,
+        `dimission_date`,
+        `rank`,
+        `parentUser`,
+        `uid`,
+        `did`
+    )
+    VALUES
+    (
+        #{title},
+        #{content},
+        #{money},
+        #{dimissionDate},
+       1,
+     #{parentUser},
+        #{uid},
+        #{did}
+    )
+
+</insert>
+
+</mapper>

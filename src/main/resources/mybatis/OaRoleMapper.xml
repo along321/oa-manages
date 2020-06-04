@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzl.oamanages.shiro.mapper.OaRoleMapper">
+
+    <select id="findByRid" resultType="int">
+        select count(*) FROM `oa_role_menu` where rid = #{rid}
+    </select>
+
+    <select id="findRoleByid" resultType="String">
+        SELECT name FROM `oa_role` WHERE id = (SELECT rid FROM `oa_role_user` WHERE uid = '#{uid}')
+    </select>
+    <select id="findByid" resultType="com.qzl.oamanages.shiro.entity.OaRole">
+        SELECT * FROM `oa_role` WHERE id = (SELECT rid FROM `oa_role_user` WHERE uid = '${uid}')
+    </select>
+
+    <select id="allRole" resultType="com.qzl.oamanages.shiro.entity.OaRole">
+        SELECT * FROM `oa_role`
+    </select>
+    <update id="editRole">
+        UPDATE
+            `oa_role_user`
+        SET
+            `rid` = #{roleid}
+        WHERE `uid` =#{uid}
+    </update>
+    <select id="toRole" resultType="com.qzl.oamanages.shiro.entity.OaRole">
+        SELECT * FROM `oa_role` where id = #{id}
+    </select>
+    <update id="update">
+        UPDATE
+            `oa_role`
+        SET
+            `name` = #{name},
+            `title` = #{title}
+        WHERE `id` = #{id};
+    </update>
+    <insert id="addRole">
+        INSERT INTO `oa_role` (`name`, `title`)
+        VALUES
+            (#{name}, #{title});
+    </insert>
+    <delete id="delMenuByRole">
+        DELETE
+        FROM
+            `oa_role_menu`
+        WHERE `rid` =#{rid}
+    </delete>
+    <insert id="addMenuByRole">
+        INSERT INTO `oa_role_menu` (`rid`, `mid`)
+        VALUES
+            (#{rid}, #{mid})
+    </insert>
+</mapper>

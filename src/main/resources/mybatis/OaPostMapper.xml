@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzl.oamanages.shiro.mapper.OaPostMapper">
+
+    <select id="allPost" resultType="com.qzl.oamanages.shiro.entity.OaPost">
+        SELECT * FROM `oa_post` where biao = 0
+    </select>
+    <select id="oaPostById" resultType="com.qzl.oamanages.shiro.entity.OaPost">
+        SELECT * FROM `oa_post` where id =#{id} and biao = 0
+    </select>
+    <insert id="addPost">
+        INSERT INTO `oa_post` (`name`,`biao`)
+        VALUES
+            (#{name},0)
+    </insert>
+    <!--<delete id="delPost">-->
+        <!--DELETE-->
+        <!--FROM-->
+            <!--`oa_post`-->
+        <!--WHERE `id` = #{id}-->
+    <!--</delete>-->
+    <update id="delPost">
+        UPDATE
+            `oa_post`
+        SET
+            `biao` = 1
+        WHERE `id` = #{id}
+    </update>
+    <update id="editPost">
+        UPDATE
+           `oa_post`
+        SET
+            `name` = #{name}
+        WHERE `id` = #{id}
+    </update>
+
+</mapper>

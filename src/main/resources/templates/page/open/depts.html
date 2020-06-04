@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.3.1-1/jquery.min.js}" src=""></script>
+    <script type="text/javascript" th:src="@{/ztree/jquery.ztree.all-3.5.min.js}" src="/ztree/jquery.ztree.all-3.5.min.js"></script>
+    <link rel="stylesheet"  th:href="@{/ztree/css/zTreeStyle/zTreeStyle.css}" thref="ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <script th:src="@{/webjars/layui/2.3.0/layui.js}" src="./lib/layui/layui.js" charset="utf-8"></script>
+</head>
+<body>
+<div class="zTreeDemoBackground left">
+    <ul id="treeDemo" class="ztree"></ul>
+</div>
+    <script th:inline="javascript"> var ctx = [[@{/}]] ; </script>
+<script>
+    layui.use(['layer'],function () {
+        var layer = layui.layer;
+        function zTreeBeforeClick(treeId, treeNode, clickFlag) {
+            console.log(treeNode);
+            $(window.parent.document).find("#L_deptname").val(treeNode.name);//往父页面传值
+            $(window.parent.document).find("#L_deptid").val(treeNode.id);
+            var index = parent.layer.getFrameIndex(window.name);
+            //关闭当前frame
+            parent.layer.close(index);
+        }
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback:{
+                beforeClick:zTreeBeforeClick
+            }
+            // ,check:{   //显示复选框
+            //     enable:true
+            // }
+        };
+
+        var zTree;
+        var treeNodes;
+        $.ajax({
+            type: "POST",
+            url: ctx+"user/depts",
+            success: function (data) {
+                treeNodes = data.extend.data;
+                console.log(treeNodes);
+                $.fn.zTree.init($("#treeDemo"), setting, treeNodes);
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

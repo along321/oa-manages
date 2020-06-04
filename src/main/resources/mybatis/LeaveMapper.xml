@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzl.oamanages.oa.mapper.LeaveMapper">
+
+    <sql id="leaveSql">
+        SELECT l.*,u.real_name AS realName,d.name AS dname FROM oa_leave l LEFT JOIN oa_user u ON l.uid = u.id LEFT JOIN oa_dept d ON l.did = d.id
+    </sql>
+    
+    <resultMap id="leaveMap" type="com.qzl.oamanages.oa.entity.Leave">
+        <id column="id" property="id"></id>
+        <result column="uid" property="uid"/>
+        <result column="did" property="did"/>
+        <result column="leatype" property="leatype"/>
+        <result column="applyDate" property="applyDate"/>
+        <result column="startDate" property="startDate"/>
+        <result column="endDate" property="endDate"/>
+        <result column="numDays" property="numDays"/>
+        <result column="conent" property="conent"/>
+        <result column="rank" property="rank"/>
+        <result column="parentuser" property="parentuser"/>
+        <result column="realName" property="realName"/>
+        <result column="deptName" property="deptName"/>
+    </resultMap>
+
+    <select id="allLeave" resultMap="leaveMap">
+        <include refid="leaveSql"></include>
+        where l.uid = #{id} and  l.rank=1 ORDER BY l.id DESC
+    </select>
+    <select id="commList" resultMap="leaveMap">
+        <include refid="leaveSql"></include>
+        where l.uid = #{id} and  l.rank=2 or l.rank =3 ORDER BY l.id DESC
+    </select>
+
+    <select id="weiLeave" resultMap="leaveMap">
+        <include refid="leaveSql"></include>
+        where l.uid = #{id} and l.rank=4 ORDER BY l.id DESC
+    </select>
+    <select id="yiLeave" resultMap="leaveMap">
+        <include refid="leaveSql"></include>
+        where l.rank=4 ORDER BY l.id DESC
+    </select>
+
+    <update id="updataRank">
+        UPDATE
+            `oa_leave`
+        SET
+            `rank` = #{rank}
+        WHERE `id` = #{id}
+    </update>
+
+    <select id="findById" resultType="com.qzl.oamanages.oa.entity.Leave">
+        SELECT * FROM `oa_leave` where id = #{id}
+    </select>
+    <update id="editLeave">
+        UPDATE
+            `oa_leave`
+        SET
+            `uid` = #{uid},
+            `did` = #{did},
+            `leatype` = #{leatype},
+            `startDate` = #{startDate},
+            `endDate` = #{endDate},
+            `numDays` = #{numDays},
+            `conent` = #{conent}
+        WHERE `id` = #{id}
+    </update>
+
+    <insert id="addLeave">
+        INSERT INTO `oa_leave` (
+            `uid`,
+            `did`,
+            `leatype`,
+            `applyDate`,
+            `startDate`,
+            `endDate`,
+            `numDays`,
+            `conent`,
+            `rank`,
+            `parentUser`
+        )
+        VALUES
+        (
+            #{uid},
+            #{did},
+            #{leatype},
+            NOW(),
+            #{startDate},
+            #{endDate},
+            #{numDays},
+            #{conent},
+            1,
+            #{parentuser}
+        )
+    </insert>
+
+</mapper>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" th:src="@{/webjars/jquery/3.3.1-1/jquery.min.js}" src=""></script>
+    <script type="text/javascript" th:src="@{/ztree/jquery.ztree.all-3.5.min.js}" src="/ztree/jquery.ztree.all-3.5.min.js"></script>
+    <link rel="stylesheet"  th:href="@{/ztree/css/zTreeStyle/zTreeStyle.css}" thref="ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <script th:src="@{/webjars/layui/2.3.0/layui.js}" src="./lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/js/xadmin.js}" src="./js/xadmin.js"></script>
+    <link rel="stylesheet" th:href="@{/css/font.css}" href="./css/font.css ">
+    <link rel="stylesheet" th:href="@{/css/xadmin.css}" href="./css/xadmin.css">
+    <link th:href="@{/webjars/layui/2.3.0/css/layui.css}" rel="stylesheet" href="layui.css">
+</head>
+<body>
+<div class="zTreeDemoBackground left">
+    <ul id="treeDemo" class="ztree"></ul>
+    <div class="layui-form-item">
+        <label for="L_submit" class="layui-form-label">
+        </label>
+        <button  class="layui-btn" id="L_submit">
+            添加
+        </button>
+    </div>
+<input th:value="${rid}" id="rid" type="hidden">
+    <script th:inline="javascript"> var ctx = [[@{/}]] ; </script>
+<script>
+    layui.use(['layer'],function () {
+        var layer = layui.layer;
+        function zTreeBeforeClick(treeId, treeNode, clickFlag) {
+            console.log(treeNode);
+            // $(window.parent.document).find("#L_deptname").val(treeNode.name);//往父页面传值
+            // $(window.parent.document).find("#L_deptid").val(treeNode.id);
+            var index = parent.layer.getFrameIndex(window.name);
+            //关闭当前frame
+            parent.layer.close(index);
+        }
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback:{
+                beforeClick:zTreeBeforeClick
+            }
+            ,check:{   //显示复选框
+                enable:true
+            }
+        };
+
+        var zTree;
+        var treeNodes;
+        var zTree_Menu;
+        var rid =  $("#rid").val();
+        console.log(rid);
+        $.ajax({
+            type: "POST",
+            data:{"rid":rid},
+            url: ctx+"role/menus",
+            success: function (data) {
+                treeNodes = data.extend.data;
+                console.log(treeNodes);
+                $.fn.zTree.init($("#treeDemo"), setting, treeNodes);
+            }
+        });
+        //监听提交
+        $("#L_submit").click(function () {
+            var zTreeOjb = $.fn.zTree.getZTreeObj("treeDemo");  //ztree的Id  zTreeI
+            var checkedNodes = zTreeOjb.getCheckedNodes();
+            var nodes = new Array();
+            for (var i=0;i<checkedNodes.length;i++){
+                nodes.push(checkedNodes[i].id);
+            }
+            $.ajax({
+                type: "POST",
+                data: {"data": nodes, "rid": rid},
+                url: ctx + "role/editMenu",
+                success: function (data) {
+                    data = eval(data);
+                    if (data.code == 200) {
+                        layer.alert("修改成功", {icon: 6}, function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //关闭当前frame
+                            parent.layer.close(index);
+                        });
+                    } else {
+                        layer.alert("修改失败");
+                    }
+                }
+
+                // });
+            });
+
+
+        });
+
+    });
+</script>
+</body>
+</html>

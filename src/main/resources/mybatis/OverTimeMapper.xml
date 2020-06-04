@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qzl.oamanages.oa.mapper.OverTimeMapper">
+
+    <sql id="overSql">
+        SELECT o.*,u.real_name,d.name FROM `oa_overtime` o LEFT JOIN oa_user u ON o.`uid` = u.`id` LEFT JOIN oa_dept d ON o.`did`= d.id
+    </sql>
+    <resultMap id="overMap" type="com.qzl.oamanages.oa.entity.OverTime">
+        <id column="id" property="id"></id>
+        <result column="uid" property="uid"/>
+        <result column="did" property="did"/>
+        <result column="overType" property="overType"/>
+        <result column="cause" property="cause"/>
+        <result column="remark" property="remark"/>
+        <result column="startDate" property="startDate"/>
+        <result column="endDate" property="endDate"/>
+        <result column="rank" property="rank"/>
+        <result column="hour" property="hour"/>
+        <result column="ms" property="ms"/>
+        <result column="real_name" property="realName"/>
+        <result column="name" property="deptName"/>
+    </resultMap>
+    <select id="overTimes" resultMap="overMap">
+        <include refid="overSql"></include>
+        where o.uid = #{id} and  o.rank=#{rank} ORDER BY o.id DESC
+    </select>
+    <select id="findById" resultType="com.qzl.oamanages.oa.entity.OverTime">
+        select * from oa_overtime where id = #{id}
+    </select>
+    <select id="yiOver" resultMap="overMap">
+        <include refid="overSql"></include>
+        where o.rank=3
+    </select>
+
+    <update id="updataRank">
+        UPDATE
+            `oa_overtime`
+        SET
+            `rank` = #{rank}
+        WHERE `id` = #{id}
+    </update>
+
+    <delete id="delOver">
+        DELETE
+        FROM
+            `along_oa`.`oa_overtime`
+        WHERE `id` = #{id}
+    </delete>
+
+    <update id="editOver">
+        UPDATE
+            `oa_overtime`
+        SET
+            `overType` = #{overType},
+            `cause` = #{cause},
+            `remark` = #{remark},
+            `startDate` = #{startDate},
+            `endDate` = #{endDate},
+            `rank` = #{rank},
+            `hour` = #{hour},
+            `ms` = #{ms},
+            `parentuser` = #{parentuser}
+        WHERE `id` = #{id};
+
+
+    </update>
+
+    <insert id="addOver">
+        INSERT INTO `oa_overtime` (
+            `uid`,
+            `did`,
+            `overType`,
+            `cause`,
+            `remark`,
+            `startDate`,
+            `endDate`,
+            `rank`,
+            `hour`,
+            `ms`,
+            `parentuser`
+        )
+        VALUES
+        (
+            #{uid},
+            #{did},
+            #{overType},
+            #{cause},
+            #{remark},
+            #{startDate},
+            #{endDate},
+            #{rank},
+           #{hour},
+         #{ms},
+         #{parentuser}
+        )
+    </insert>
+
+</mapper>
